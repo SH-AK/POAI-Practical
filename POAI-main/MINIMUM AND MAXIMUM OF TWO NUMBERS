@@ -1,0 +1,29 @@
+%%writefile minmax.pl
+
+% Rule to find the minimum of two numbers
+minimum(X, Y, X) :- X =< Y.
+minimum(X, Y, Y) :- X > Y.
+
+% Rule to find the maximum of two numbers
+maximum(X, Y, X) :- X >= Y.
+maximum(X, Y, Y) :- X < Y.
+
+% Main program
+:- initialization(main).
+
+main :-
+    minimum(50, 20, Min),
+    maximum(50, 20, Max),
+    write('Minimum = '),
+    write(Min),
+    nl,
+    write('Maximum = '),
+    write(Max),
+    nl,
+    halt.
+Writing minmax.pl
+!swipl -q -s minmax.pl
+
+OUTPUT:
+Minimum = 20
+Maximum = 50

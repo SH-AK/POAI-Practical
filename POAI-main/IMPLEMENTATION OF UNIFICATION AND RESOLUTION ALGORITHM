@@ -1,0 +1,83 @@
+
+def unify(x, y, theta=None):
+    if theta is None:
+        theta = {}
+
+    if x == y:
+        return theta
+
+    elif isinstance(x, str) and x.islower():
+        return unify_var(x, y, theta)
+
+    elif isinstance(y, str) and y.islower():
+        return unify_var(y, x, theta)
+
+    elif isinstance(x, list) and isinstance(y, list) and len(x) == len(y):
+        theta = unify(x[0], y[0], theta)
+        if theta is not None:
+            return unify(x[1:], y[1:], theta)
+        return None
+
+    else:
+        return None
+
+
+
+def unify_var(var, x, theta):
+    if var in theta:
+        return unify(theta[var], x, theta)
+    elif isinstance(x, str) and x in theta:
+        return unify(var, theta[x], theta)
+    else:
+        theta[var] = x
+        return theta
+
+
+
+knowledge_base = [
+    [["Human", "John"], ["Mortal", "John"]]
+]
+
+
+facts = [
+    ["Human", "John"]
+]
+
+
+query = ["Mortal", "John"]
+
+
+
+def resolution(kb, facts, query):
+
+    for fact in facts:
+        if unify(fact, query) is not None:
+            return True
+
+
+    for clause in kb:
+        if len(clause) == 2:
+            premise, conclusion = clause
+
+            theta = unify(conclusion, query)
+            if theta is not None:
+
+                premise = [
+                    theta.get(term, term) if isinstance(term, str) else term
+                    for term in premise
+                ]
+
+                if resolution(kb, facts, premise):
+                    return True
+
+    return False
+
+
+
+if resolution(knowledge_base, facts, query):
+    print("Query is resolved: John is Mortal")
+else:
+    print("Query could not be resolved")
+
+OUTPUT:
+Query is resolved: John is Mortal

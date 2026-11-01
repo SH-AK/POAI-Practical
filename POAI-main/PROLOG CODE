@@ -1,0 +1,30 @@
+!apt-get update -qq
+!apt-get install -y swi-prolog-nox
+
+%%writefile likes.pl
+
+likes(mary, food).
+likes(mary, wine).
+likes(john, wine).
+likes(john, mary).
+
+likes(john, X) :- likes(mary, X).
+likes(john, Y) :- likes(Y, wine).
+likes(john, Y) :- likes(Y, Y).
+
+:- initialization(main).
+
+main :-
+    likes(john, food),
+    write('John likes food'),
+    nl,
+    likes(john, wine),
+    write('John likes wine'),
+    nl,
+    halt.
+Writing likes.pl
+!swipl -q -s likes.pl
+
+OUTPUT:
+John likes food
+John likes wine
